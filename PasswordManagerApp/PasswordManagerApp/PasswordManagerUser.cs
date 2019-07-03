@@ -7,7 +7,7 @@ using System.Text;
 
 namespace PasswordManagerApp
 {
-    public class PasswordManagerUser
+    public class PasswordManagerUser : IPasswordManagerUser
     {
         public string Name { get; set; }
         public ICollection<IPasswordProperties> Passwords { get; set; }
@@ -16,7 +16,7 @@ namespace PasswordManagerApp
         public bool CheckPassword(string password)
         {
             byte[] hashResult = hashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(password));
-            return hashResult.Zip(PasswordHash, (r, p) => r == p).All(x => x);
+            return hashResult.Zip(PasswordHash, (resultByte, passwordHashByte) => resultByte == passwordHashByte).All(x => x);
         }
     }
 }

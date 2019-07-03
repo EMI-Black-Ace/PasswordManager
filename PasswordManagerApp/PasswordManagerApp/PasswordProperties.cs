@@ -1,11 +1,30 @@
-﻿using System;
+﻿using PasswordManagerInterfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace PasswordManagerApp
 {
-    public class PasswordProperties
+    public class PasswordProperties : IPasswordProperties
     {
+        public string Name { get; set; }
+        public uint Length { get; set; }
+        public bool MustHaveCaps { get; set; }
+        public bool MustHaveLower { get; set; }
+        public bool MustHaveSpc { get; set; }
+        public bool MustNotHaveSpc { get; set; }
 
+        private readonly IPasswordManagerUser passwordManagerUser;
+        private Guid passwordVersion = Guid.NewGuid();
+
+        public void ChangeThisPassword()
+        {
+            passwordVersion = Guid.NewGuid();
+        }
+
+        public string GeneratePassword(string masterPassword)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
