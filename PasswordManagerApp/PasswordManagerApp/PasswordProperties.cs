@@ -15,16 +15,18 @@ namespace PasswordManagerApp
         public bool MustNotHaveSpc { get; set; }
 
         private readonly IPasswordManagerUser passwordManagerUser;
-        private Guid passwordVersion = Guid.NewGuid();
+        private Guid passwordSeed = Guid.NewGuid();
 
         public void ChangeThisPassword()
         {
-            passwordVersion = Guid.NewGuid();
+            passwordSeed = Guid.NewGuid();
         }
 
         public string GeneratePassword(string masterPassword)
         {
             throw new NotImplementedException();
         }
+
+        
     }
 }

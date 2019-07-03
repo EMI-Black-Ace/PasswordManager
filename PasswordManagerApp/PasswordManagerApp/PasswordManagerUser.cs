@@ -16,7 +16,7 @@ namespace PasswordManagerApp
         public bool CheckPassword(string password)
         {
             byte[] hashResult = hashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(password));
-            return hashResult.Zip(PasswordHash, (resultByte, passwordHashByte) => resultByte == passwordHashByte).All(x => x);
+            return hashResult.AllItemsAreEqual(PasswordHash);
         }
     }
 }
