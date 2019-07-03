@@ -21,7 +21,20 @@ namespace PasswordManagerInterfaces
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
 
-            return source.Zip(other, (x, y) => x.Equals(y)).All(x => x);
+            IEnumerator<T> sourceEnumerator = source.GetEnumerator();
+            IEnumerator<T> otherEnumerator = other.GetEnumerator();
+            bool sourceActive = sourceEnumerator.MoveNext();
+            bool otherActive = otherEnumerator.MoveNext();
+            while(sourceActive && otherActive)
+            {
+                if (!sourceEnumerator.Current.Equals(otherEnumerator.Current))
+                    return false;
+                sourceActive = sourceEnumerator.MoveNext();
+                otherActive = otherEnumerator.MoveNext();
+                if (sourceActive != otherActive)
+                    return false;
+            }
+            return true;
         }
 
         public static bool AllItemsMatch<T>(this IEnumerable<T> source, IEnumerable<T> other, Func<T, T, bool> predicate)
@@ -31,7 +44,20 @@ namespace PasswordManagerInterfaces
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
 
-            return source.Zip(other, (x, y) => predicate(x, y)).All(x => x);
+            IEnumerator<T> sourceEnumerator = source.GetEnumerator();
+            IEnumerator<T> otherEnumerator = other.GetEnumerator();
+            bool sourceActive = sourceEnumerator.MoveNext();
+            bool otherActive = otherEnumerator.MoveNext();
+            while (sourceActive && otherActive)
+            {
+                if (!predicate(sourceEnumerator.Current, otherEnumerator.Current))
+                    return false;
+                sourceActive = sourceEnumerator.MoveNext();
+                otherActive = otherEnumerator.MoveNext();
+                if (sourceActive != otherActive)
+                    return false;
+            }
+            return true;
         }
 
         public static IEnumerable<T> Convolve<T>(this IEnumerable<T> source, IEnumerable<T> other, Func<T, T, T> accumulator) where T : new()
