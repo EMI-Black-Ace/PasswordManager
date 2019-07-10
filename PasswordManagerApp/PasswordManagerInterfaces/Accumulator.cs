@@ -4,6 +4,10 @@ using System.Text;
 
 namespace PasswordManagerInterfaces
 {
+    /// <summary>
+    /// A class used for accumulating data with the IEnumerable.Mingle() method.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Accumulator<T> where T : new()
     {
         /// <summary>

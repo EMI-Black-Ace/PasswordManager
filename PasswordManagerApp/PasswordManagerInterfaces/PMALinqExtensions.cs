@@ -60,6 +60,16 @@ namespace PasswordManagerInterfaces
             return true;
         }
 
+        /// <summary>
+        /// This method combines information from an item in one collection with every item in another collection,
+        /// using an accumulator to combine the information.  This is intended to encode a new password from
+        /// known information without the generated password being reasonable to reverse engineer the source information from.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="other"></param>
+        /// <param name="accumulator"></param>
+        /// <returns></returns>
         public static IEnumerable<T> Mingle<T>(this IEnumerable<T> source, IEnumerable<T> other, Accumulator<T> accumulator) where T : new()
         {
             if (source == null)
