@@ -60,7 +60,7 @@ namespace PasswordManagerInterfaces
             return true;
         }
 
-        public static IEnumerable<T> Convolve<T>(this IEnumerable<T> source, IEnumerable<T> other, Func<T, T, T> accumulator) where T : new()
+        public static IEnumerable<T> Mingle<T>(this IEnumerable<T> source, IEnumerable<T> other, Accumulator<T> accumulator) where T : new()
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -70,14 +70,16 @@ namespace PasswordManagerInterfaces
             other = other.Reverse();
             int length1 = source.Count();
             int length2 = other.Count();
-            T accumulatedValue = new T();
-            for(int i = 0; i < length1 + length2; i++)
+            
+            for(int i = 0; i < length1 + length2 - 1; i++)
             {
-                for(int j = 0; j < i; j++)
+                accumulator.Reset();
+                for (int j = 0; j < length2; j++)
                 {
-                    accumulatedValue = accumulator(source.ElementAtOrDefault(j), other.ElementAtOrDefault(j));
+                    accumulator.Accumulate(source.ElementAtOrDefault(i - j), other.ElementAtOrDefault(j));
                 }
-                yield return accumulatedValue;
+                yield return accumulator.AccumulatedValue;
+
             }
         }
     }
