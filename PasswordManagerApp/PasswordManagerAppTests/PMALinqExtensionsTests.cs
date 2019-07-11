@@ -1,6 +1,6 @@
 using NUnit.Framework;
 using System.Collections.Generic;
-using PasswordManagerInterfaces;
+using PasswordManagerApp;
 using System.Linq;
 
 namespace PasswordManagerAppTests

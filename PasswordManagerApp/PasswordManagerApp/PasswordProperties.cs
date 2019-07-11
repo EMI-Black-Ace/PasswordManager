@@ -1,6 +1,8 @@
-﻿using PasswordManagerInterfaces;
+﻿using Newtonsoft.Json;
+using PasswordManagerInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace PasswordManagerApp
@@ -32,7 +34,21 @@ namespace PasswordManagerApp
         /// <returns>a generated password</returns>
         public string GeneratePassword(string masterPassword)
         {
-            throw new NotImplementedException();
+            if(!passwordManagerUser.CheckPassword(masterPassword))
+            {
+                throw new ArgumentException("Password did not match", nameof(masterPassword));
+            }
+
+            string self = JsonConvert.SerializeObject(this);
+            string user = JsonConvert.SerializeObject(passwordManagerUser);
+            Accumulator<char> mingleAlgorithm = new Accumulator<char>((a, x, y) =>
+            {
+                int v = a + (x * y);
+                return a = (char)v;
+            });
+
+            //TODO:  Doesn't satisfy password parameters at this point
+            return new string(masterPassword.Mingle(user, mingleAlgorithm).Mingle(self, mingleAlgorithm).Take((int)Length).ToArray());
         }
 
         public override string ToString() => $"{passwordManagerUser.Name}: {Name}";

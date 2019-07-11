@@ -44,7 +44,7 @@ namespace PasswordManagerInterfaces
         string GeneratePassword(string masterPassword);
 
         /// <summary>
-        /// Changes an internal condition so the generated password is different from before.
+        /// Changes an internal condition so the generated password is different from before.  Not reversible.
         /// </summary>
         void ChangeThisPassword();
     }

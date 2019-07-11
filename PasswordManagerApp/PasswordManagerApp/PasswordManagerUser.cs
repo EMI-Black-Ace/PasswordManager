@@ -18,5 +18,11 @@ namespace PasswordManagerApp
             byte[] hashResult = hashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(password));
             return hashResult.AllItemsAreEqual(PasswordHash);
         }
+        public PasswordManagerUser(string name, string masterPassword, HashAlgorithm hashAlgorithm)
+        {
+            Name = name;
+            this.hashAlgorithm = hashAlgorithm;
+            PasswordHash = this.hashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(masterPassword));
+        }
     }
 }

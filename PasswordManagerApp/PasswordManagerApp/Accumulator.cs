@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PasswordManagerInterfaces
+namespace PasswordManagerApp
 {
     /// <summary>
     /// A class used for accumulating data with the IEnumerable.Mingle() method.
