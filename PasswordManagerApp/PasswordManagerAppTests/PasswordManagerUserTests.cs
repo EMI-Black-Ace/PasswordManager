@@ -5,45 +5,40 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json;
+using PasswordManagerApp;
 
 namespace PasswordManagerAppTests
 {
     public class PasswordManagerUserTests
     {
-        private const string testHashFile = "../../Resources/passwordHash.txt";
+        private const string testHashFile = "../../../Resources/passwordHash.json";
 
         private class PasswordClass
         {
-            public string testPassword { get; set; } = "Worst Password Ever!";
-            public byte[] hash { get; set; }
+            public string TestPassword { get; set; } = "Worst Password Ever!";
+            public byte[] Hash { get; set; }
         }
-        private PasswordClass password { get; set; }
+
+        private PasswordClass Password { get; set; }
+
+        private PasswordManagerUser passwordManagerUser;
 
         [OneTimeSetUp]
         public void StartTests()
         {
             if (!File.Exists(testHashFile))
             {
+                Password = new PasswordClass();
                 SHA1 hashGenerator = new SHA1CryptoServiceProvider();
-                var hash = hashGenerator.ComputeHash(Encoding.ASCII.GetBytes(password.testPassword));
-                using (Stream sw = File.Open(testHashFile, FileMode.CreateNew))
-                {
-                    sw.Write(BitConverter.GetBytes(testPassword.Length));
-                    sw.Write(testPassword.Cast<byte>().ToArray());
-                    sw.Write(hash);
-                }
+                Password.Hash = hashGenerator.ComputeHash(Encoding.ASCII.GetBytes(Password.TestPassword));
+                string persistentPassword = JsonConvert.SerializeObject(Password);
+                File.WriteAllText(testHashFile, persistentPassword);
             }
             else
             {
-                using(Stream sr = File.Open(testHashFile, FileMode.Open))
-                {
-                    byte[] lengthRead = new byte[sizeof(int)];
-                    sr.Read(lengthRead, 0, sizeof(int));
-                    int length = BitConverter.ToInt32(lengthRead);
-                    byte[] passwordRead = new byte[length];
-                    sr.Read(passwordRead, 0, length);
-                    sr.
-                }
+                string jsonPassword = File.ReadAllText(testHashFile);
+                Password = JsonConvert.DeserializeObject<PasswordClass>(jsonPassword);
             }
             
         }
@@ -51,13 +46,16 @@ namespace PasswordManagerAppTests
         [SetUp]
         public void Setup()
         {
-
+            passwordManagerUser = new PasswordManagerUser("Test", Password.TestPassword, new SHA1CryptoServiceProvider());
         }
 
+        /// <summary>
+        /// Demonstrates that the generated password hash is the same every time.
+        /// </summary>
         [Test]
         public void HashConsistencyTest()
         {
-
+            Assert.AreEqual(Password.Hash, passwordManagerUser.PasswordHash);
         }
     }
 }
