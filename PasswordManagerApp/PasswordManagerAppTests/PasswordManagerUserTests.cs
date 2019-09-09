@@ -57,5 +57,17 @@ namespace PasswordManagerAppTests
         {
             Assert.AreEqual(Password.Hash, passwordManagerUser.PasswordHash);
         }
+
+        [Test]
+        public void CheckPassword_PasswordIsValid_ReturnsTrue()
+        {
+            Assert.IsTrue(passwordManagerUser.CheckPassword(Password.TestPassword));
+        }
+
+        [Test]
+        public void CheckPassword_PasswordIsInvalid_ReturnsFalse()
+        {
+            Assert.IsFalse(passwordManagerUser.CheckPassword(Password.TestPassword + "_Invalid"));
+        }
     }
 }

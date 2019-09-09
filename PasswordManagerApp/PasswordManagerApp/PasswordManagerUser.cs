@@ -13,11 +13,13 @@ namespace PasswordManagerApp
         public ICollection<IPasswordProperties> Passwords { get; set; }
         public byte[] PasswordHash { get; set; }
         private HashAlgorithm hashAlgorithm;
+
         public bool CheckPassword(string password)
         {
             byte[] hashResult = hashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(password));
             return hashResult.AllItemsAreEqual(PasswordHash);
         }
+
         public PasswordManagerUser(string name, string masterPassword, HashAlgorithm hashAlgorithm)
         {
             Name = name;
