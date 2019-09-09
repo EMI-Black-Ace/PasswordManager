@@ -23,8 +23,8 @@ namespace PasswordManagerApp
         public PasswordManagerUser(string name, string masterPassword, HashAlgorithm hashAlgorithm)
         {
             Name = name;
-            this.HashAlgorithm = hashAlgorithm;
-            PasswordHash = this.HashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(masterPassword));
+            HashAlgorithm = hashAlgorithm;
+            PasswordHash = HashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(masterPassword));
         }
     }
 }

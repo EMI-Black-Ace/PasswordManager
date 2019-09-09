@@ -51,6 +51,8 @@ namespace PasswordManagerApp
 
             byte[] passwordBytes = passwordManagerUser.HashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(overallComponents));
 
+            passwordBytes.ReduceOrExpand(Length, (x, y) => x + y);
+
             throw new NotImplementedException();
         }
 
