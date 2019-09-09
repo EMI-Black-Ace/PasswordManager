@@ -39,16 +39,19 @@ namespace PasswordManagerApp
                 throw new ArgumentException("Password did not match", nameof(masterPassword));
             }
 
-            string self = JsonConvert.SerializeObject(this);
-            string user = JsonConvert.SerializeObject(passwordManagerUser);
-            Accumulator<char> mingleAlgorithm = new Accumulator<char>((a, x, y) =>
-            {
-                int v = a + (x * y);
-                return a = (char)v;
-            });
+            string overallComponents = $"{masterPassword}" +
+                $"{passwordManagerUser.Name}" +
+                $"{new string(passwordManagerUser.PasswordHash.Cast<char>().ToArray())}" +
+                $"{passwordSeed}" +
+                $"{Length}" +
+                $"{MustHaveCaps}" +
+                $"{MustHaveLower}" +
+                $"{MustHaveSpc}" +
+                $"{MustNotHaveSpc}";
 
-            //TODO:  Doesn't satisfy password parameters at this point
-            return new string(masterPassword.Mingle(user, mingleAlgorithm).Mingle(self, mingleAlgorithm).Take((int)Length).ToArray());
+            byte[] passwordBytes = passwordManagerUser.HashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(overallComponents));
+
+            throw new NotImplementedException();
         }
 
         public override string ToString() => $"{passwordManagerUser.Name}: {Name}";
