@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using PasswordManagerInterfaces;
+﻿using PasswordManagerInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +17,7 @@ namespace PasswordManagerApp
 
         private readonly IPasswordManagerUser passwordManagerUser;
         private Guid passwordSeed = Guid.NewGuid();
-        private int _length;
-
-        /// <summary>
-        /// Changes the stored randomizer seed involved in creating the password.  Not reversible.
-        /// </summary>
+        private int _length = 8;
         public void ChangeThisPassword()
         {
             passwordSeed = Guid.NewGuid();
@@ -52,9 +47,69 @@ namespace PasswordManagerApp
 
             byte[] passwordBytes = passwordManagerUser.HashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(overallComponents));
 
-            passwordBytes.ReduceOrExpand(Length, (x, y) => (byte)((x + y) % byte.MaxValue));
+            passwordBytes = passwordBytes.ReduceOrExpand(Length, (x, y) => (byte)((x + y) % byte.MaxValue));
+
+            //set up functions to select characters for password
+            Func<byte, char>[] forcingFunctions;
+            if (MustNotHaveSpc)
+            {
+                forcingFunctions = Enumerable.Repeat<Func<byte, char>>(ForceToNonSpecial, Length).ToArray();
+            }
+            else
+            {
+                forcingFunctions = Enumerable.Repeat<Func<byte, char>>(ForceToPrintable, Length).ToArray();
+            }
+
+            //TODO finish picking forcing functions
 
             throw new NotImplementedException();
+        }
+
+        private char ForceBetween(char arg, char min, char max)
+        {
+            return (char)(arg % (max - min) + min);
+        }
+
+        private char ForceToPrintable(byte characterSeed)
+        {
+            return ForceBetween((char)characterSeed, '!', '~');
+        }
+
+        private char ForceToUpper(byte characterSeed)
+        {
+            return ForceBetween((char)characterSeed, 'A', 'Z');
+        }
+
+        private char ForceToLower(byte characterSeed)
+        {
+            return ForceBetween((char)characterSeed, 'a', 'z');
+        }
+
+        private char ForceToNumeric(byte characterSeed)
+        {
+            return ForceBetween((char)characterSeed, '0', '9');
+        }
+
+        private char ForceToNonSpecial(byte characterSeed)
+        {
+            if (characterSeed >= (byte.MaxValue * 2) / 3)
+                return ForceToLower(characterSeed);
+            else if (characterSeed >= byte.MaxValue / 3)
+                return ForceToUpper(characterSeed);
+            else
+                return ForceToNumeric(characterSeed);
+        }
+
+        private char ForceToSpecial(byte characterSeed)
+        {
+            if (characterSeed >= 'a')
+                return ForceBetween((char)characterSeed, '{', '~');
+            else if (characterSeed >= 'A')
+                return ForceBetween((char)characterSeed, '[', '`');
+            else if (characterSeed >= '0')
+                return ForceBetween((char)characterSeed, ':', '@');
+            else
+                return ForceBetween((char)characterSeed, '!', '/');
         }
 
         public override string ToString() => $"{passwordManagerUser.Name}: {Name}";
