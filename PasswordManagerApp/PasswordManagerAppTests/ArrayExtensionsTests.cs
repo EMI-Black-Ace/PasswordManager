@@ -64,5 +64,12 @@ namespace PasswordManagerAppTests
             Assert.AreEqual(5, newArray.Length);
             CollectionAssert.IsNotSubsetOf(newArray, array);
         }
+
+        [Test]
+        public void ReduceOrExpand_ZeroLength_ThrowsException()
+        {
+            int[] array = { 1, 2, 3 };
+            Assert.Throws<ArgumentException>(() => array.ReduceOrExpand(0, (x, y) => x + y));
+        }
     }
 }

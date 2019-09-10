@@ -10,7 +10,7 @@ namespace PasswordManagerApp
     public class PasswordProperties : IPasswordProperties
     {
         public string Name { get; set; }
-        public uint Length { get; set; }
+        public int Length { get => _length; set => _length = value > 0 ? value : throw new ArgumentException("must be greater than 0"); }
         public bool MustHaveCaps { get; set; }
         public bool MustHaveLower { get; set; }
         public bool MustHaveSpc { get; set; }
@@ -18,6 +18,7 @@ namespace PasswordManagerApp
 
         private readonly IPasswordManagerUser passwordManagerUser;
         private Guid passwordSeed = Guid.NewGuid();
+        private int _length;
 
         /// <summary>
         /// Changes the stored randomizer seed involved in creating the password.  Not reversible.
@@ -34,7 +35,7 @@ namespace PasswordManagerApp
         /// <returns>a generated password</returns>
         public string GeneratePassword(string masterPassword)
         {
-            if(!passwordManagerUser.CheckPassword(masterPassword))
+            if (!passwordManagerUser.CheckPassword(masterPassword))
             {
                 throw new ArgumentException("Password did not match", nameof(masterPassword));
             }
@@ -51,7 +52,7 @@ namespace PasswordManagerApp
 
             byte[] passwordBytes = passwordManagerUser.HashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(overallComponents));
 
-            passwordBytes.ReduceOrExpand(Length, (x, y) => x + y);
+            passwordBytes.ReduceOrExpand(Length, (x, y) => (byte)((x + y) % byte.MaxValue));
 
             throw new NotImplementedException();
         }

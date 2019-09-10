@@ -14,7 +14,7 @@ namespace PasswordManagerInterfaces
         /// <summary>
         /// Length the generated password must be
         /// </summary>
-        uint Length { get; set; }
+        int Length { get; set; }
 
         /// <summary>
         /// True if the password must have an uppercase letter

@@ -34,6 +34,11 @@ namespace PasswordManagerApp
         /// <returns></returns>
         public static T[] ReduceOrExpand<T>(this T[] items, int newLength, Func<T,T,T> combinerFunction)
         {
+            if(newLength <= 0)
+            {
+                throw new ArgumentException("Must be greater than zero");
+            }
+
             if(items.Length == newLength)
             {
                 return (T[])items.Clone();
