@@ -11,6 +11,7 @@ namespace PasswordManagerApp
         public int Length { get; set; }
         public bool MustHaveCaps { get; set; }
         public bool MustHaveLower { get; set; }
+        public bool MustHaveNumber { get; set; }
         public bool MustHaveSpc { get; set; }
         public bool MustNotHaveSpc { get; set; }
 
@@ -44,6 +45,7 @@ namespace PasswordManagerApp
                 $"{Length}" +
                 $"{MustHaveCaps}" +
                 $"{MustHaveLower}" +
+                $"{MustHaveNumber}" + 
                 $"{MustHaveSpc}" +
                 $"{MustNotHaveSpc}";
 
@@ -60,32 +62,79 @@ namespace PasswordManagerApp
 
         private IEnumerable<Func<byte, char>> ConvertByteToCharFuncs()
         {
-            throw new NotImplementedException();
+            List<Func<byte, char>> funcs = new List<Func<byte, char>>();
+            int orderSelector = passwordSeed.ToByteArray()[0] % 4;
+            switch (orderSelector)
+            {
+                case 0:
+                    yield return SelectMethodOrDefault(ByteToCapital, MustHaveCaps);
+                    yield return SelectMethodOrDefault(ByteToLowercase, MustHaveLower);
+                    yield return SelectMethodOrDefault(ByteToNumber, MustHaveNumber);
+                    yield return SelectMethodOrDefault(ByteToSpecial, MustHaveSpc);
+                    break;
+                case 1:
+                    yield return SelectMethodOrDefault(ByteToLowercase, MustHaveLower);
+                    yield return SelectMethodOrDefault(ByteToNumber, MustHaveNumber);
+                    yield return SelectMethodOrDefault(ByteToSpecial, MustHaveSpc);
+                    yield return SelectMethodOrDefault(ByteToCapital, MustHaveCaps);
+                    break;
+                case 2:
+                    yield return SelectMethodOrDefault(ByteToNumber, MustHaveNumber);
+                    yield return SelectMethodOrDefault(ByteToSpecial, MustHaveSpc);
+                    yield return SelectMethodOrDefault(ByteToCapital, MustHaveCaps);
+                    yield return SelectMethodOrDefault(ByteToLowercase, MustHaveLower);
+                    break;
+                case 3:
+                    yield return SelectMethodOrDefault(ByteToSpecial, MustHaveSpc);
+                    yield return SelectMethodOrDefault(ByteToCapital, MustHaveCaps);
+                    yield return SelectMethodOrDefault(ByteToLowercase, MustHaveLower);
+                    yield return SelectMethodOrDefault(ByteToNumber, MustHaveNumber);
+                    break;
+            }
+            while (true)
+                yield return SelectMethodOrDefault(null, false);
         }
 
         private char ByteToPrintable(byte x)
         {
-            throw new NotImplementedException();
+            return (char)(' ' + (x % 94));
         }
 
         private char ByteToCapital(byte x)
         {
-            throw new NotImplementedException();
+            return (char)('A' + (x % 26));
         }
 
         private char ByteToLowercase(byte x)
         {
-            throw new NotImplementedException();
+            return (char)('a' + (x % 26));
+        }
+
+        private char ByteToNumber(byte x)
+        {
+            return (char)('0' + (x % 10));
         }
 
         private char ByteToSpecial(byte x)
         {
-            throw new NotImplementedException();
+            const string spcTable = "`-=[]\\;',./~!@#$%^&*()_+{}|:\"<>?";
+            return spcTable[x % spcTable.Length];
         }
 
         private char ByteToNonSpecial(byte x)
         {
-            throw new NotImplementedException();
+            const string nonSpcTable = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+            return nonSpcTable[x % nonSpcTable.Length];
+        }
+
+        private Func<byte, char> SelectMethodOrDefault(Func<byte, char> method, bool selector)
+        {
+            if (selector)
+                return method;
+            else if (MustNotHaveSpc)
+                return ByteToNonSpecial;
+            else
+                return ByteToPrintable;
         }
     }
 }
