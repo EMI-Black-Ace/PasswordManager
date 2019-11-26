@@ -1,13 +1,11 @@
-﻿using Newtonsoft.Json;
-using PasswordManagerInterfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace PasswordManagerApp
 {
-    public class PasswordProperties : IPasswordProperties
+    public class PasswordProperties
     {
         public string Name { get; set; }
         public uint Length { get; set; }
@@ -16,7 +14,7 @@ namespace PasswordManagerApp
         public bool MustHaveSpc { get; set; }
         public bool MustNotHaveSpc { get; set; }
 
-        private readonly IPasswordManagerUser passwordManagerUser;
+        private readonly PasswordManagerUser passwordManagerUser;
         private Guid passwordSeed = Guid.NewGuid();
 
         /// <summary>
@@ -58,6 +56,6 @@ namespace PasswordManagerApp
 
         public override string ToString() => $"{passwordManagerUser.Name}: {Name}";
 
-        public PasswordProperties(IPasswordManagerUser passwordManagerUser) => this.passwordManagerUser = passwordManagerUser ?? throw new ArgumentNullException(nameof(passwordManagerUser));
+        public PasswordProperties(PasswordManagerUser passwordManagerUser) => this.passwordManagerUser = passwordManagerUser ?? throw new ArgumentNullException(nameof(passwordManagerUser));
     }
 }

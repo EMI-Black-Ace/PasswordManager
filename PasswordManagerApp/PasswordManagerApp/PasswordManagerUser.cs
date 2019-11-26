@@ -1,5 +1,4 @@
-﻿using PasswordManagerInterfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -7,10 +6,10 @@ using System.Text;
 
 namespace PasswordManagerApp
 {
-    public class PasswordManagerUser : IPasswordManagerUser
+    public class PasswordManagerUser
     {
         public string Name { get; set; }
-        public ICollection<IPasswordProperties> Passwords { get; set; }
+        public ICollection<PasswordProperties> Passwords { get; set; }
         public byte[] PasswordHash { get; set; }
         public HashAlgorithm HashAlgorithm { get; set; }
 
