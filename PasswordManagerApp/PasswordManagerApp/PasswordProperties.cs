@@ -8,7 +8,7 @@ namespace PasswordManagerApp
     public class PasswordProperties
     {
         public string Name { get; set; }
-        public uint Length { get; set; }
+        public int Length { get; set; }
         public bool MustHaveCaps { get; set; }
         public bool MustHaveLower { get; set; }
         public bool MustHaveSpc { get; set; }
@@ -49,13 +49,43 @@ namespace PasswordManagerApp
 
             byte[] passwordBytes = passwordManagerUser.HashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(overallComponents));
 
-            passwordBytes.ReduceOrExpand(Length, (x, y) => x + y);
+            passwordBytes.ReduceOrExpand(Length, (x, y) => (byte)(x + y));
 
-            throw new NotImplementedException();
+            return new string(passwordBytes.Zip(ConvertByteToCharFuncs(), (b, func) => func(b)).ToArray());
         }
 
         public override string ToString() => $"{passwordManagerUser.Name}: {Name}";
 
         public PasswordProperties(PasswordManagerUser passwordManagerUser) => this.passwordManagerUser = passwordManagerUser ?? throw new ArgumentNullException(nameof(passwordManagerUser));
+
+        private IEnumerable<Func<byte, char>> ConvertByteToCharFuncs()
+        {
+            throw new NotImplementedException();
+        }
+
+        private char ByteToPrintable(byte x)
+        {
+            throw new NotImplementedException();
+        }
+
+        private char ByteToCapital(byte x)
+        {
+            throw new NotImplementedException();
+        }
+
+        private char ByteToLowercase(byte x)
+        {
+            throw new NotImplementedException();
+        }
+
+        private char ByteToSpecial(byte x)
+        {
+            throw new NotImplementedException();
+        }
+
+        private char ByteToNonSpecial(byte x)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
