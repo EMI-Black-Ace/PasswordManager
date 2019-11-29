@@ -9,7 +9,7 @@ namespace PasswordManagerApp
     public class PasswordManagerUser
     {
         public string Name { get; set; }
-        public ICollection<PasswordProperties> Passwords { get; set; }
+        public ICollection<PasswordProperties> Passwords { get; set; } = new HashSet<PasswordProperties>();
         public byte[] PasswordHash { get; set; }
         public HashAlgorithm HashAlgorithm { get; set; }
 
@@ -19,11 +19,11 @@ namespace PasswordManagerApp
             return hashResult.AllItemsAreEqual(PasswordHash);
         }
 
-        public PasswordManagerUser(string name, string masterPassword, HashAlgorithm hashAlgorithm)
+        public PasswordManagerUser(IUserProvider provider, HashAlgorithm hashAlgorithm)
         {
-            Name = name;
+            Name = provider.UserName;
             HashAlgorithm = hashAlgorithm;
-            PasswordHash = HashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(masterPassword));
+            PasswordHash = HashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(provider.MasterPassword));
         }
     }
 }

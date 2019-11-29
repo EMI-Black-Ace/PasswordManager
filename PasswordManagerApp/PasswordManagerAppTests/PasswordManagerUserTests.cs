@@ -14,13 +14,15 @@ namespace PasswordManagerAppTests
     {
         private const string testHashFile = "../../../Resources/passwordHash.json";
 
-        private class PasswordClass
+        private class PasswordClass : IUserProvider
         {
-            public string TestPassword { get; set; } = "Worst Password Ever!";
+            public string MasterPassword { get; set; } = "Worst Password Ever!";
             public byte[] Hash { get; set; }
+
+            public string UserName => "Test";
         }
 
-        private PasswordClass Password { get; set; }
+        private PasswordClass UserProvider { get; set; }
 
         private PasswordManagerUser passwordManagerUser;
 
@@ -29,16 +31,16 @@ namespace PasswordManagerAppTests
         {
             if (!File.Exists(testHashFile))
             {
-                Password = new PasswordClass();
+                UserProvider = new PasswordClass();
                 SHA1 hashGenerator = new SHA1CryptoServiceProvider();
-                Password.Hash = hashGenerator.ComputeHash(Encoding.ASCII.GetBytes(Password.TestPassword));
-                string persistentPassword = JsonConvert.SerializeObject(Password);
+                UserProvider.Hash = hashGenerator.ComputeHash(Encoding.ASCII.GetBytes(UserProvider.MasterPassword));
+                string persistentPassword = JsonConvert.SerializeObject(UserProvider);
                 File.WriteAllText(testHashFile, persistentPassword);
             }
             else
             {
                 string jsonPassword = File.ReadAllText(testHashFile);
-                Password = JsonConvert.DeserializeObject<PasswordClass>(jsonPassword);
+                UserProvider = JsonConvert.DeserializeObject<PasswordClass>(jsonPassword);
             }
             
         }
@@ -46,7 +48,7 @@ namespace PasswordManagerAppTests
         [SetUp]
         public void Setup()
         {
-            passwordManagerUser = new PasswordManagerUser("Test", Password.TestPassword, new SHA1CryptoServiceProvider());
+            passwordManagerUser = new PasswordManagerUser(UserProvider, new SHA1CryptoServiceProvider());
         }
 
         /// <summary>
@@ -55,19 +57,19 @@ namespace PasswordManagerAppTests
         [Test]
         public void HashConsistencyTest()
         {
-            Assert.AreEqual(Password.Hash, passwordManagerUser.PasswordHash);
+            Assert.AreEqual(UserProvider.Hash, passwordManagerUser.PasswordHash);
         }
 
         [Test]
         public void CheckPassword_PasswordIsValid_ReturnsTrue()
         {
-            Assert.IsTrue(passwordManagerUser.CheckPassword(Password.TestPassword));
+            Assert.IsTrue(passwordManagerUser.CheckPassword(UserProvider.MasterPassword));
         }
 
         [Test]
         public void CheckPassword_PasswordIsInvalid_ReturnsFalse()
         {
-            Assert.IsFalse(passwordManagerUser.CheckPassword(Password.TestPassword + "_Invalid"));
+            Assert.IsFalse(passwordManagerUser.CheckPassword(UserProvider.MasterPassword + "_Invalid"));
         }
     }
 }
