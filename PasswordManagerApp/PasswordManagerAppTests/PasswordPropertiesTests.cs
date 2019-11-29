@@ -9,8 +9,8 @@ namespace PasswordManagerAppTests
 {
     public class PasswordPropertiesTests
     {
-        private PasswordManagerUser user;
-        private PasswordProperties password;
+        private readonly PasswordManagerUser user;
+        private readonly PasswordProperties password;
         
         public PasswordPropertiesTests()
         {
