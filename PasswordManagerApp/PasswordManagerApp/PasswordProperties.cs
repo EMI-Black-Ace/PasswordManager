@@ -58,7 +58,7 @@ namespace PasswordManagerApp
 
         public override string ToString() => $"{passwordManagerUser.Name}: {Name}";
 
-        public PasswordProperties(PasswordManagerUser passwordManagerUser) => this.passwordManagerUser = passwordManagerUser ?? throw new ArgumentNullException(nameof(passwordManagerUser));
+        internal PasswordProperties(PasswordManagerUser passwordManagerUser) => this.passwordManagerUser = passwordManagerUser ?? throw new ArgumentNullException(nameof(passwordManagerUser));
 
         private IEnumerable<Func<byte, char>> ConvertByteToCharFuncs()
         {
