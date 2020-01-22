@@ -12,8 +12,32 @@ namespace PasswordManagerApp
         public bool MustHaveCaps { get; set; }
         public bool MustHaveLower { get; set; }
         public bool MustHaveNumber { get; set; }
-        public bool MustHaveSpc { get; set; }
-        public bool MustNotHaveSpc { get; set; }
+        private bool mustHaveSpc = false;
+        public bool MustHaveSpc
+        {
+            get => mustHaveSpc;
+            set
+            {
+                if(value && mustNotHaveSpc)
+                {
+                    MustNotHaveSpc = false;
+                }
+                mustHaveSpc = value;
+            }
+        }
+        private bool mustNotHaveSpc = false;
+        public bool MustNotHaveSpc
+        {
+            get => mustNotHaveSpc;
+            set
+            {
+                if(value && mustHaveSpc)
+                {
+                    MustHaveSpc = false;
+                }
+                mustNotHaveSpc = value;
+            }
+        }
 
         private readonly PasswordManagerUser passwordManagerUser;
         private Guid passwordSeed = Guid.NewGuid();
@@ -40,7 +64,7 @@ namespace PasswordManagerApp
 
             string overallComponents = $"{masterPassword}" +
                 $"{passwordManagerUser.Name}" +
-                $"{new string(passwordManagerUser.PasswordHash.Cast<char>().ToArray())}" +
+                $"{Encoding.ASCII.GetChars(passwordManagerUser.PasswordHash)}" +
                 $"{passwordSeed}" +
                 $"{Length}" +
                 $"{MustHaveCaps}" +
@@ -49,9 +73,8 @@ namespace PasswordManagerApp
                 $"{MustHaveSpc}" +
                 $"{MustNotHaveSpc}";
 
-            byte[] passwordBytes = passwordManagerUser.HashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(overallComponents));
-
-            passwordBytes.ReduceOrExpand(Length, (x, y) => (byte)(x + y));
+            byte[] passwordBytes = passwordManagerUser.HashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(overallComponents))
+                .ReduceOrExpand(Length, (x,y) => (byte)(x + y));
 
             return new string(passwordBytes.Zip(ConvertByteToCharFuncs(), (b, func) => func(b)).ToArray());
         }
@@ -97,34 +120,32 @@ namespace PasswordManagerApp
 
         private char ByteToPrintable(byte x)
         {
-            return (char)(' ' + (x % 94));
+            return CharacterTables.printableTable.WrapSelectChar(x);
         }
 
         private char ByteToCapital(byte x)
         {
-            return (char)('A' + (x % 26));
+            return CharacterTables.upperTable.WrapSelectChar(x);
         }
 
         private char ByteToLowercase(byte x)
         {
-            return (char)('a' + (x % 26));
+            return CharacterTables.lowerTable.WrapSelectChar(x);
         }
 
         private char ByteToNumber(byte x)
         {
-            return (char)('0' + (x % 10));
+            return CharacterTables.numberTable.WrapSelectChar(x);
         }
 
         private char ByteToSpecial(byte x)
         {
-            const string spcTable = "`-=[]\\;',./~!@#$%^&*()_+{}|:\"<>?";
-            return spcTable[x % spcTable.Length];
+            return CharacterTables.spcTable.WrapSelectChar(x);
         }
 
         private char ByteToNonSpecial(byte x)
         {
-            const string nonSpcTable = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
-            return nonSpcTable[x % nonSpcTable.Length];
+            return CharacterTables.nonSpcTable.WrapSelectChar(x);
         }
 
         private Func<byte, char> SelectMethodOrDefault(Func<byte, char> method, bool selector)

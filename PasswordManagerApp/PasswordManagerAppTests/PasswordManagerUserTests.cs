@@ -14,7 +14,7 @@ namespace PasswordManagerAppTests
     {
         private const string testHashFile = "../../../Resources/passwordHash.json";
 
-        private class PasswordClass : IUserProvider
+        private class PasswordClass
         {
             public string MasterPassword { get; set; } = "Worst Password Ever!";
             public byte[] Hash { get; set; }
@@ -22,7 +22,7 @@ namespace PasswordManagerAppTests
             public string UserName => "Test";
         }
 
-        private PasswordClass UserProvider { get; set; }
+        private static PasswordClass UserProvider { get; set; }
 
         private PasswordManagerUser passwordManagerUser;
 
@@ -48,7 +48,7 @@ namespace PasswordManagerAppTests
         [SetUp]
         public void Setup()
         {
-            passwordManagerUser = new PasswordManagerUser(UserProvider, new SHA1CryptoServiceProvider());
+            passwordManagerUser = PasswordManagerUser.Factory.CreateNewUser(UserProvider.UserName, UserProvider.MasterPassword);
         }
 
         /// <summary>
