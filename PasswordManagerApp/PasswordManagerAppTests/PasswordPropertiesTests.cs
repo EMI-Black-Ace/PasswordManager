@@ -13,13 +13,13 @@ namespace PasswordManagerAppTests
     {
         private PasswordManagerUser user;
         private PasswordProperties password;
-        private const string userName = "mock user";
-        private const string userPassword = "mock password";
+        private const string USER_NAME = "mock user";
+        private const string USER_PASSWORD = "mock password";
         
         [SetUp]
         public void Setup()
         {
-            user = PasswordManagerUser.Factory.CreateNewUser(userName, userPassword);
+            user = PasswordManagerUser.Factory.CreateNewUser(USER_NAME, USER_PASSWORD);
             password = user.CreateNewStoredPassword();
         }
 
@@ -42,7 +42,7 @@ namespace PasswordManagerAppTests
             password.MustHaveSpc = mustHaveSpecial;
             password.MustNotHaveSpc = mustNotHaveSpecial;
 
-            string generatedPassword = password.GeneratePassword(userPassword);
+            string generatedPassword = password.GeneratePassword(USER_PASSWORD);
 
             Assert.AreEqual(password.Length, generatedPassword.Length);
 
@@ -68,5 +68,15 @@ namespace PasswordManagerAppTests
             }
         }
 
+        [Test]
+        public void ChangeThisPassword_PasswordIsUnique()
+        {
+            password.Length = 5;
+            string originalPassword = password.GeneratePassword(USER_PASSWORD);
+            password.ChangeThisPassword();
+            string newPassword = password.GeneratePassword(USER_PASSWORD);
+
+            Assert.AreNotEqual(originalPassword, newPassword);
+        }
     }
 }

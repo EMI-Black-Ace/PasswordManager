@@ -12,5 +12,6 @@ namespace PasswordManagerApp
         {
             return new PasswordManagerUser(name, masterPassword, hashAlgorithm);
         }
+        internal PasswordManagerUserFactory() { }
     }
 }

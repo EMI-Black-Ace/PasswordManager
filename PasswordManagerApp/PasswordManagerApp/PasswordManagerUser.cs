@@ -6,13 +6,16 @@ using System.Text;
 
 namespace PasswordManagerApp
 {
+    /// <summary>
+    /// A user of the Password Manager app.  Create using PasswordManagerUser.Factory.CreateNewUser method.
+    /// </summary>
     public class PasswordManagerUser
     {
         public string Name { get; set; }
         private List<PasswordProperties> passwords = new List<PasswordProperties>();
         public IReadOnlyCollection<PasswordProperties> Passwords => passwords;
         public byte[] PasswordHash { get; set; }
-        public HashAlgorithm HashAlgorithm { get; set; }
+        internal HashAlgorithm HashAlgorithm { get; private set; }
 
         public bool CheckPassword(string password)
         {
