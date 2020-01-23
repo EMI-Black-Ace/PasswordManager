@@ -4,6 +4,7 @@ using PasswordManagerApp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -77,6 +78,26 @@ namespace PasswordManagerAppTests
             string newPassword = password.GeneratePassword(USER_PASSWORD);
 
             Assert.AreNotEqual(originalPassword, newPassword);
+        }
+
+        [Test]
+        public void ChangePasswordProperty_PasswordChanges()
+        {
+            password.Name = "Google";
+            password.Length = 8;
+            List<string> passwordList = new List<string>() { password.GeneratePassword(USER_PASSWORD) };
+            foreach(PropertyInfo pi in password.GetType().GetProperties().Where(p => p.PropertyType == typeof(bool)))
+            {
+                bool oldValue = (bool)pi.GetValue(password);
+                pi.SetValue(password, !oldValue);
+                passwordList.Add(password.GeneratePassword(USER_PASSWORD));
+            }
+            password.Name = "Yahoo";
+            passwordList.Add(password.GeneratePassword(USER_PASSWORD));
+            password.Length = 7;
+            passwordList.Add(password.GeneratePassword(USER_PASSWORD));
+
+            CollectionAssert.AllItemsAreUnique(passwordList);
         }
     }
 }

@@ -66,6 +66,7 @@ namespace PasswordManagerApp
                 $"{passwordManagerUser.Name}" +
                 $"{Encoding.ASCII.GetChars(passwordManagerUser.PasswordHash)}" +
                 $"{passwordSeed}" +
+                $"{Name}" +
                 $"{Length}" +
                 $"{MustHaveCaps}" +
                 $"{MustHaveLower}" +
