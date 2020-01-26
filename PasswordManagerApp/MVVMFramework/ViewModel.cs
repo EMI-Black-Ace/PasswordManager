@@ -48,7 +48,7 @@ namespace MVVMFramework
             }
             else
             {
-                throw new ArgumentException("memberSelector must only select a property", 
+                throw new ArgumentException("Selector expression must only select a property", 
                     nameof(propertySelector));
             }
         }
