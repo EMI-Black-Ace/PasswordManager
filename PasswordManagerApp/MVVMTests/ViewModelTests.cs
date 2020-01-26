@@ -13,7 +13,7 @@ namespace MVVMTests
             public string StringProperty
             {
                 get => stringMember;
-                set { SetProperty(value); }
+                set { SetField(ref stringMember, value); }
             }
 
             public void ModifyStringMember(string toSet)
@@ -38,6 +38,8 @@ namespace MVVMTests
             vm = new TestViewModel();
             vm.StringProperty = "FirstValue";
             vm.PropertyChanged += LogLastPropertyChanged;
+            lastObjectChanged = null;
+            lastPropertyChanged = null;
         }
 
         private void LogLastPropertyChanged(object sender, PropertyChangedEventArgs e)

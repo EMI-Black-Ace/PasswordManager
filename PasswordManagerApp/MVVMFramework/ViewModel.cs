@@ -11,23 +11,21 @@ namespace MVVMFramework
     {
         private readonly Dictionary<string, PropertyInfo> propertyDict 
             = new Dictionary<string, PropertyInfo>();
+        private readonly List<string> callStack = new List<string>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Call this method in a derived viewmodel to raise the PropertyChanged event
         /// </summary>
-        /// <param name="value">the new value being assigned to the property</param>
+        /// <param name="field">the backing field being assigned to</param>
+        /// <param name="value">the new value being assigned to the backing field</param>
         /// <param name="caller">USE DEFAULT -- the name of the property being changed</param>
-        protected void SetProperty(object value, [CallerMemberName] string caller = null)
+        protected void SetField<T>(ref T field, T value, [CallerMemberName] string caller = null)
         {
-            if (!propertyDict.ContainsKey(caller))
+            if(!value.Equals(field))
             {
-                propertyDict.Add(caller, this.GetType().GetProperty(caller));
-            }
-            if(value != propertyDict[caller].GetValue(this))
-            {
-                propertyDict[caller].SetValue(value, this);
+                field = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(caller));
             }
         }
@@ -36,13 +34,12 @@ namespace MVVMFramework
         /// Call this method in a derived viewmodel to raise the PropertyChanged event
         /// ONLY on a property where SetProperty cannot be called within the property itself
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="Tprop"></typeparam>
         /// <param name="propertySelector">Selects the property to raise the event for.
-        /// Example: () => this.Name</param>
-        protected void OnPropertyChanged<T>(Expression<Func<T>> propertySelector)
+        /// Example: () => Name</param>
+        protected void OnPropertyChanged<Tprop>(Expression<Func<Tprop>> propertySelector)
         {
-            if(propertySelector is MemberExpression member 
-            && member.Member.MemberType == MemberTypes.Property)
+            if (propertySelector.Body is MemberExpression member)
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(member.Member.Name));
             }
