@@ -6,18 +6,36 @@
              x:Class="PasswordManagerUI.MainPage">
 
     <StackLayout>
-        <Picker Title="User Name" />
-        <Button Text="Create New"/>
+        <Grid>
+            <Picker Title="User Name" Grid.Column="0" Grid.ColumnSpan="2">
+                <d:Picker.Items>
+                    <x:String>Person 1</x:String>
+                    <x:String>Person 2</x:String>
+                </d:Picker.Items>
+            </Picker>
+            <Button Text="Create New" Grid.Column="2" />
+        </Grid>
         <Entry Placeholder="Master Password" IsPassword="True"/>
-        <Picker Title="Password Name"/>
-        <Button Text="New Password"/>
-        <Entry Placeholder="Generated Password" IsReadOnly="True"/>
-        <Button Text="Generate Password"/>
-        <Switch x:Name="RequireCapsSwitch"/>
-        <Switch x:Name="RequireLowerSwitch"/>
-        <Switch x:Name="RequireNumberSwitch"/>
-        <Switch x:Name="RequireSpecialSwitch"/>
-        <Switch x:Name="SpecialNotAllowedSwitch"/>
+        <Grid>
+            <Picker Title="Password Name" Grid.Column="0" Grid.ColumnSpan="2"/>
+            <Button Text="Create New" Grid.Column="2"/>
+        </Grid>
+        <Grid>
+            <Entry Placeholder="Generate Password" IsReadOnly="True" Grid.Column="0" Grid.ColumnSpan="2"/>
+            <Button Text="Generate" Grid.Column="2"/>
+        </Grid>
+        <Grid>
+            <Label Text="Require Capital Letter" Grid.Row="0" HorizontalTextAlignment="End" Grid.Column="0" Grid.ColumnSpan="3" VerticalTextAlignment="Center" FontSize="Large"/>
+            <Switch x:Name="RequireCapsSwitch" Grid.Row="0" Grid.Column="3"/>
+            <Label Text="Require Lowercase Letter" Grid.Row="1" HorizontalTextAlignment="End" Grid.Column="0" Grid.ColumnSpan="3" VerticalTextAlignment="Center" FontSize="Large"/>
+            <Switch x:Name="RequireLowerSwitch" Grid.Row="1" Grid.Column="3"/>
+            <Label Text="Require Number" Grid.Row="2" HorizontalTextAlignment="End" Grid.Column="0" Grid.ColumnSpan="3" VerticalTextAlignment="Center" FontSize="Large"/>
+            <Switch x:Name="RequireNumberSwitch" Grid.Row="2" Grid.Column="3"/>
+            <Label Text="Require Special Character" Grid.Row="3" HorizontalTextAlignment="End" Grid.Column="0" Grid.ColumnSpan="3" VerticalTextAlignment="Center" FontSize="Large"/>
+            <Switch x:Name="RequireSpecialSwitch" Grid.Row="3" Grid.Column="3"/>
+            <Label Text="No Special Characters" Grid.Row="4" HorizontalTextAlignment="End" Grid.Column="0" Grid.ColumnSpan="3" VerticalTextAlignment="Center" FontSize="Large"/>
+            <Switch x:Name="SpecialNotAllowedSwitch" Grid.Row="4" Grid.Column="3"/>
+        </Grid>
     </StackLayout>
 
 </ContentPage>
