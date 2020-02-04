@@ -3,6 +3,7 @@ using PasswordManagerApp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows.Input;
 
@@ -19,7 +20,15 @@ namespace PasswordManagerUI
         private FunctionCommand generatePasswordCommand;
 
         public ObservableCollection<PasswordManagerUser> Users { get; internal set; }
-        public PasswordManagerUser SelectedUser { get => selectedUser; set => SetField(ref selectedUser, value); }
+        public PasswordManagerUser SelectedUser 
+        { 
+            get => selectedUser;
+            set
+            {
+                SetField(ref selectedUser, value);
+                SelectedPassword = selectedUser.Passwords.First();
+            }
+        }
         public PasswordProperties SelectedPassword { get => selectedPassword; set => SetField(ref selectedPassword, value); }
         public string MasterPassword { get => masterPassword; set => SetField(ref masterPassword, value); }
         public string GeneratedPassword { get => generatedPassword; set => SetField(ref generatedPassword, value); }
