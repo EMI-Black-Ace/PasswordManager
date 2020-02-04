@@ -23,6 +23,26 @@ namespace PasswordManagerUI
         public PasswordProperties SelectedPassword { get => selectedPassword; set => SetField(ref selectedPassword, value); }
         public string MasterPassword { get => masterPassword; set => SetField(ref masterPassword, value); }
         public string GeneratedPassword { get => generatedPassword; set => SetField(ref generatedPassword, value); }
+        public bool RequireSpecial 
+        { 
+            get => SelectedPassword?.MustHaveSpc ?? false;
+            set
+            {
+                SelectedPassword.MustHaveSpc = value;
+                OnPropertyChanged(() => SelectedPassword.MustHaveSpc);
+                OnPropertyChanged(() => SelectedPassword.MustNotHaveSpc);
+            }
+        }
+        public bool NoSpecialAllowed
+        {
+            get => SelectedPassword.MustNotHaveSpc;
+            set
+            {
+                SelectedPassword.MustNotHaveSpc = value;
+                OnPropertyChanged(() => SelectedPassword.MustHaveSpc);
+                OnPropertyChanged(() => SelectedPassword.MustNotHaveSpc);
+            }
+        }
 
         public ICommand CreateUserCommand
         {
