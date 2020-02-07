@@ -38,8 +38,8 @@ namespace PasswordManagerUI
             set
             {
                 SelectedPassword.MustHaveSpc = value;
-                OnPropertyChanged(() => SelectedPassword.MustHaveSpc);
-                OnPropertyChanged(() => SelectedPassword.MustNotHaveSpc);
+                OnPropertyChanged(() => RequireSpecial);
+                OnPropertyChanged(() => NoSpecialAllowed);
             }
         }
         public bool NoSpecialAllowed
@@ -48,8 +48,8 @@ namespace PasswordManagerUI
             set
             {
                 SelectedPassword.MustNotHaveSpc = value;
-                OnPropertyChanged(() => SelectedPassword.MustHaveSpc);
-                OnPropertyChanged(() => SelectedPassword.MustNotHaveSpc);
+                OnPropertyChanged(() => RequireSpecial);
+                OnPropertyChanged(() => NoSpecialAllowed);
             }
         }
 

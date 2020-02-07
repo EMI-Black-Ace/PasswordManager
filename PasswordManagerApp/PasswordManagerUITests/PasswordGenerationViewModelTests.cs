@@ -33,6 +33,44 @@ namespace PasswordManagerUITests
             CollectionAssert.Contains(_propertiesChanged, "SelectedPassword");
         }
 
+        [Test]
+        public void SelectedPasswordChanges_NotifyEventRaised()
+        {
+            _vm = GetVmInstance();
+            _vm.SelectedUser = TestPasswordManagerUsers.Instance.Users.First();
+            _vm.SelectedPassword = _vm.SelectedUser.Passwords.First(p => p != _vm.SelectedPassword);
+
+            CollectionAssert.Contains(_propertiesChanged, "SelectedPassword");
+        }
+
+        [Test]
+        public void RequireSpecialChanged_ChangesNoSpc_EventsRaised()
+        {
+            _vm = GetVmInstance();
+            _vm.SelectedUser = TestPasswordManagerUsers.Instance.Users.First();
+            _vm.NoSpecialAllowed = true;
+            _propertiesChanged.Clear();
+            _vm.RequireSpecial = true;
+
+            Assert.IsFalse(_vm.NoSpecialAllowed);
+            CollectionAssert.Contains(_propertiesChanged, "RequireSpecial");
+            CollectionAssert.Contains(_propertiesChanged, "NoSpecialAllowed");
+        }
+
+        [Test]
+        public void NoSpecialChanged_ChangesReqSpc_EventsRaised()
+        {
+            _vm = GetVmInstance();
+            _vm.SelectedUser = TestPasswordManagerUsers.Instance.Users.First();
+            _vm.RequireSpecial = true;
+            _propertiesChanged.Clear();
+            _vm.NoSpecialAllowed = true;
+
+            Assert.IsFalse(_vm.RequireSpecial);
+            CollectionAssert.Contains(_propertiesChanged, "RequireSpecial");
+            CollectionAssert.Contains(_propertiesChanged, "NoSpecialAllowed");
+        }
+
         private PasswordGenerationViewModel GetVmInstance()
         {
             var vm = _automock.Get<PasswordGenerationViewModel>();

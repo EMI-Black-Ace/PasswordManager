@@ -7,34 +7,47 @@
 
     <StackLayout>
         <Grid>
-            <Picker Title="User Name" Grid.Column="0" Grid.ColumnSpan="2">
+            <Picker Title="User Name" Grid.Column="0" Grid.ColumnSpan="2"
+                    ItemsSource="{Binding Users}"
+                    SelectedItem="{Binding SelectedUser}">
                 <d:Picker.Items>
                     <x:String>Person 1</x:String>
                     <x:String>Person 2</x:String>
                 </d:Picker.Items>
             </Picker>
-            <Button Text="Create New" Grid.Column="2" />
+            <Button Text="Create New" Grid.Column="2" Command="{Binding CreateUserCommand}"/>
         </Grid>
-        <Entry Placeholder="Master Password" IsPassword="True"/>
+        <Entry Placeholder="Master Password" IsPassword="True"
+               Text="{Binding MasterPassword}"/>
         <Grid>
-            <Picker Title="Password Name" Grid.Column="0" Grid.ColumnSpan="2"/>
-            <Button Text="Create New" Grid.Column="2"/>
+            <Picker Title="Password Name" Grid.Column="0" Grid.ColumnSpan="2"
+                    ItemsSource="{Binding SelectedUser.Passwords}"
+                    SelectedItem="{Binding SelectedPassword}"/>
+            <Button Text="Create New" Grid.Column="2" 
+                    Command="{Binding CreatePasswordCommand}" 
+                    CommandParameter="{Binding SelectedUser}"/>
         </Grid>
         <Grid>
-            <Entry Placeholder="Generate Password" IsReadOnly="True" Grid.Column="0" Grid.ColumnSpan="2"/>
+            <Entry Placeholder="Generate Password" IsReadOnly="True" Grid.Column="0" Grid.ColumnSpan="2"
+                   Text="{Binding GeneratedPassword}"/>
             <Button Text="Generate" Grid.Column="2"/>
         </Grid>
         <Grid>
             <Label Text="Require Capital Letter" Grid.Row="0" HorizontalTextAlignment="End" Grid.Column="0" Grid.ColumnSpan="3" VerticalTextAlignment="Center" FontSize="Large"/>
-            <Switch x:Name="RequireCapsSwitch" Grid.Row="0" Grid.Column="3"/>
+            <Switch x:Name="RequireCapsSwitch" Grid.Row="0" Grid.Column="3"
+                    IsToggled="{Binding SelectedPassword.MustHaveCaps}"/>
             <Label Text="Require Lowercase Letter" Grid.Row="1" HorizontalTextAlignment="End" Grid.Column="0" Grid.ColumnSpan="3" VerticalTextAlignment="Center" FontSize="Large"/>
-            <Switch x:Name="RequireLowerSwitch" Grid.Row="1" Grid.Column="3"/>
+            <Switch x:Name="RequireLowerSwitch" Grid.Row="1" Grid.Column="3"
+                    IsToggled="{Binding SelectedPassword.MustHaveLower}"/>
             <Label Text="Require Number" Grid.Row="2" HorizontalTextAlignment="End" Grid.Column="0" Grid.ColumnSpan="3" VerticalTextAlignment="Center" FontSize="Large"/>
-            <Switch x:Name="RequireNumberSwitch" Grid.Row="2" Grid.Column="3"/>
+            <Switch x:Name="RequireNumberSwitch" Grid.Row="2" Grid.Column="3"
+                    IsToggled="{Binding SelectedPassword.MustHaveNumber}"/>
             <Label Text="Require Special Character" Grid.Row="3" HorizontalTextAlignment="End" Grid.Column="0" Grid.ColumnSpan="3" VerticalTextAlignment="Center" FontSize="Large"/>
-            <Switch x:Name="RequireSpecialSwitch" Grid.Row="3" Grid.Column="3"/>
+            <Switch x:Name="RequireSpecialSwitch" Grid.Row="3" Grid.Column="3"
+                    IsToggled="{Binding SelectedPassword.MustHaveSpc}"/>
             <Label Text="No Special Characters" Grid.Row="4" HorizontalTextAlignment="End" Grid.Column="0" Grid.ColumnSpan="3" VerticalTextAlignment="Center" FontSize="Large"/>
-            <Switch x:Name="SpecialNotAllowedSwitch" Grid.Row="4" Grid.Column="3"/>
+            <Switch x:Name="SpecialNotAllowedSwitch" Grid.Row="4" Grid.Column="3"
+                    IsToggled="{Binding SelectedPassword.MustNotHaveSpc}"/>
         </Grid>
     </StackLayout>
 
