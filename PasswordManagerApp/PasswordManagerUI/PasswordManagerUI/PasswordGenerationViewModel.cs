@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace PasswordManagerUI
 {
-    public class PasswordGenerationViewModel : ViewModel
+    public class PasswordGenerationViewModel : ViewModel, IPasswordGenerationViewModel
     {
         private PasswordManagerUser selectedUser;
         private PasswordProperties selectedPassword;
