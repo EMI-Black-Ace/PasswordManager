@@ -13,8 +13,8 @@ namespace PasswordManagerUI
         PasswordProperties SelectedPassword { get; set; }
         string MasterPassword { get; set; }
         string GeneratedPassword { get; set; }
-        ICommand CreateUserCommand { get; set; }
-        ICommand CreatePasswordCommand { get; set; }
-        FunctionCommand GeneratePasswordCommand { get; set; }
+        ICommand CreateUserCommand { get; }
+        ICommand CreatePasswordCommand { get; }
+        ICommand GeneratePasswordCommand { get; }
     }
 }

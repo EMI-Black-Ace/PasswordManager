@@ -3,6 +3,7 @@ using Ninject.MockingKernel.Moq;
 using NUnit.Framework;
 using PasswordManagerApp;
 using PasswordManagerUI;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using TestCommonLibrary;
@@ -13,15 +14,15 @@ namespace PasswordManagerUITests
     {
         private readonly MoqMockingKernel _automock = new MoqMockingKernel();
         private PasswordGenerationViewModel _vm;
-        private readonly System.Collections.Generic.List<string> _propertiesChanged = new System.Collections.Generic.List<string>();
+        private readonly List<string> _propertiesChanged = new List<string>();
 
         [SetUp]
         public void Setup()
         {
             _automock.Reset();
-            _propertiesChanged.RemoveAll(x => true);
         }
 
+        #region property change notifications
         [Test]
         public void SelectedUserChanges_NotifyEventRaised_SelectedPasswordUpdates()
         {
@@ -70,6 +71,9 @@ namespace PasswordManagerUITests
             CollectionAssert.Contains(_propertiesChanged, "RequireSpecial");
             CollectionAssert.Contains(_propertiesChanged, "NoSpecialAllowed");
         }
+        #endregion
+        
+
 
         private PasswordGenerationViewModel GetVmInstance()
         {

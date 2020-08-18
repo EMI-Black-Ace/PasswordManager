@@ -15,9 +15,10 @@ namespace PasswordManagerUI
         private PasswordProperties selectedPassword;
         private string masterPassword;
         private string generatedPassword;
-        private ICommand createUserCommand;  //TODO:  Replace with abstract
-        private ICommand createPasswordCommand;  //TODO:  Replace with abstract
         private FunctionCommand generatePasswordCommand;
+
+        public ICommand CreateUserCommand { get; private set; }
+        public ICommand CreatePasswordCommand { get; private set; }
 
         public ObservableCollection<PasswordManagerUser> Users { get; internal set; }
         public PasswordManagerUser SelectedUser 
@@ -50,30 +51,6 @@ namespace PasswordManagerUI
                 SelectedPassword.MustNotHaveSpc = value;
                 OnPropertyChanged(() => RequireSpecial);
                 OnPropertyChanged(() => NoSpecialAllowed);
-            }
-        }
-
-        public ICommand CreateUserCommand
-        {
-            get
-            {
-                if(createUserCommand == null)
-                {
-                    createUserCommand = null; //TODO:  User Creation Service
-                }
-                return createUserCommand;
-            }
-        }
-
-        public ICommand CreateNewPasswordCommand
-        {
-            get
-            {
-                if(createPasswordCommand == null)
-                {
-                    createPasswordCommand = null; //TODO:  Password Creation Service
-                }
-                return createPasswordCommand;
             }
         }
 
