@@ -3,6 +3,7 @@ using Ninject.MockingKernel.Moq;
 using NUnit.Framework;
 using PasswordManagerApp;
 using PasswordManagerUI;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -73,7 +74,35 @@ namespace PasswordManagerUITests
         }
         #endregion
         
+        [Test]
+        public void ClickCreatePassword_ValidUser_OpensService()
+        {
+            throw new NotImplementedException();
+        }
 
+        [Test]
+        public void ClickCreatePassword_NoUserSelected_NothingHappens()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Test]
+        public void ClickCreateUser_OpensService()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Test]
+        public void ClickGeneratePassword_ValidPasswordSelected_GeneratesPassword()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Test]
+        public void ClickGeneratePassword_NoValidPasswordSelected_NothingHappens()
+        {
+            throw new NotImplementedException();
+        }
 
         private PasswordGenerationViewModel GetVmInstance()
         {
